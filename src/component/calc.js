@@ -1,28 +1,103 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from './button';
 
-const calc = () => {
+const Calc = () => {
     const [firstNumber, setFirstNumber] = useState(null);
     const [secondNumber, setSecondNumber] = useState(null);
     const [operator, setOperator] = useState(null);
     const [displayNumber, setDisplayNumber] = useState(null);
-    const [result, setResult] = useState (null)
+    const [result, setResult] = useState (null);
+
+    useEffect(() => {
+        showNumber();
+    },[firstNumber,secondNumber]);
+
+    const showNumber = () => {
+        if (result)
+        {
+            setDisplayNumber(result);
+        }
+        else if (!operator)
+        {
+            setDisplayNumber(firstNumber);
+        }
+        else
+        {
+            setDisplayNumber(secondNumber);
+        }
+    };
+
     const handleNumber = (val) => {
-        console.log(val);
+        setResult(null);
+        if(!firstNumber && !operator)
+        {
+            setFirstNumber(val.toString());
+        }
+        else if (firstNumber && !operator)
+        {
+            setFirstNumber(firstNumber + val);
+        }
+        else if (!secondNumber) 
+        {
+            setSecondNumber(val.toString());
+        }
     };
     const handleOperator = (val) => {
-        console.log(`operator ${val}`);
+        if(result)
+        {
+            setFirstNumber(result);
+            setOperator(val);
+
+        }
+        if (firstNumber)
+        {
+            setOperator(val);
+        }
     };
     const handleClear = () => {
-        console.log('clear');   
+        setFirstNumber(null);
+        setSecondNumber(null);
+        setOperator(null);
+        setDisplayNumber(null)
     };
     const handleResult = () => {
-        console.log('result');
+        let tempResult;
+        switch (operator)
+        {
+            case '+':
+                tempResult = parseFloat(firstNumber) + parseFloat(secondNumber);
+                setResult(tempResult,toString());
+                handleClear();
+                break;
+
+            case '-':
+                tempResult = parseFloat(firstNumber) + parseFloat(secondNumber);
+                setResult(tempResult,toString());
+                handleClear();
+                break;
+
+            case '*':
+                tempResult = parseFloat(firstNumber) + parseFloat(secondNumber);
+                setResult(tempResult,toString());
+                handleClear();
+                break;
+                
+            case '/':
+                tempResult = parseFloat(firstNumber) + parseFloat(secondNumber);
+                setResult(tempResult,toString());
+                handleClear();
+                break;
+
+            default:
+                break;
+        }
     };
   return (
     <div className='w-[320px] h-[245px] bg-gray-800'>
         <div className='flex h-[100px] items-center justify-end text-white'>
-            <span className='text-4xl pr-5'>0</span>
+            <span className='text-4xl pr-5'>
+                {displayNumber ? displayNumber : 0}
+            </span>
         </div>
         <div className='flex flex-row flex-wrap h-[345]'>
             {/* first row */}
@@ -56,4 +131,4 @@ const calc = () => {
   )
 }
 
-export default calc
+export default Calc
