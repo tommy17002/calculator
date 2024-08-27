@@ -20,23 +20,29 @@ const Calc = () => {
 
     const handleNumber = (val) => {
         setResult(null);
-        setExpression(expression + val);
+        // Menangani kasus jika tanda kurung sebelumnya dihapus
+        if (expression === '' && val === '-') {
+            setExpression(val); // Memulai dengan tanda negatif
+        } else {
+            setExpression(expression + val);
+        }
     };
 
     const handleOperator = (val) => {
-        if (val === '-') {
-            // Jika '-' digunakan sebagai penanda negatif, pastikan ia ditempatkan dengan benar
-            if (expression === '' || ['+', '-', '*', '/', '^'].includes(expression.slice(-1))) {
-                setExpression(expression + val);
-            }
-        } else if (val === '(' || val === ')') {
+        // Menangani tanda kurung dengan benar
+        if (val === '(' || val === ')') {
             setExpression(expression + val);
         } else {
-            // Untuk operator lainnya, pastikan tidak ada operator berturut-turut
-            if (['+', '-', '*', '/', '^'].includes(expression.slice(-1))) {
-                setExpression(expression.slice(0, -1) + val);
-            } else {
+            if (val === '-' && (expression === '' || ['+', '-', '*', '/', '^', '('].includes(expression.slice(-1)))) {
+                // Menambahkan tanda minus jika sebelumnya tidak ada angka
                 setExpression(expression + val);
+            } else if (['+', '-', '*', '/', '^'].includes(val)) {
+                if (['+', '-', '*', '/', '^'].includes(expression.slice(-1))) {
+                    // Mengganti operator terakhir jika ada
+                    setExpression(expression.slice(0, -1) + val);
+                } else {
+                    setExpression(expression + val);
+                }
             }
         }
     };
